@@ -9,10 +9,7 @@ function CardContainer({ dataList }) {
                     <CatCard
                         key={data.id}
                         idx={data.id}
-                        imgSrc={data.image.url}
-                        name={data.name}
-                        description={data.description}
-                        origin={data.origin}
+                        data={data}
                     />
                 )
             }

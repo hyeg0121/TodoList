@@ -1,23 +1,25 @@
 import React from 'react';
-import { Card, Col } from 'react-bootstrap';
+import { Button, Card, Col } from 'react-bootstrap';
 
 
-function CatCard({ idx, imgSrc, name, description, origin }) {
+function CatCard({ idx, data }) {
 
 
     return (
         <Col key={idx}>
-            <Card className='h-100'>
-                <Card.Img variant="top" src={imgSrc} />
+            <Card>
+                <Card.Img variant="top" src={data.image.url} style={{ height: '200px', objectFit: 'cover' }} />
                 <Card.Body>
-                    <Card.Title>{name}</Card.Title>
+                    <Card.Title>{data.name}</Card.Title>
                     <Card.Text>
-                        {description}
+                        <ul>
+                            <li>지역: {data.origin}</li>
+                            <li>적응력: {data.adaptability}</li>
+                            <li>지능: {data.intelligence}</li>
+                        </ul>
                     </Card.Text>
+                    <Button variant="primary">자세히 보기</Button>
                 </Card.Body>
-                <Card.Footer>
-                    <small>{origin}</small>
-                </Card.Footer>
             </Card>
         </Col>
     )
