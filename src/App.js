@@ -15,7 +15,7 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`https://api.thecatapi.com/v1/breeds?limit=10&page=${page}`, {
+      const response = await axios.get(`https://api.thecatapi.com/v1/breeds?limit=12&page=${page}`, {
         headers: {
           "Content-Type": "application/json",
           "x-api-key": process.env.REACT_APP_X_API_KEY
@@ -30,7 +30,8 @@ function App() {
   };
 
   return (
-    <Container >
+    <Container className="my-4">
+      <h1>Cats</h1>
       {
         loading ?
           <Spinner animation="border" role="status">
