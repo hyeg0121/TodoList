@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/locale';
+import { ko } from 'date-fns/locale'
+import React, { useState } from 'react'
+import { Button, Col, Form, Row } from 'react-bootstrap'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
-function TodoAdder(props) {
-    const [title, setTitle] = useState('');
-    const [deadline, setDeadline] = useState(new Date());
-    const [category, setCategory] = useState('STUDY');
+function TodoAdder({ setLoading }) {
+    const [task, setTask] = useState('')
+    const [deadline, setDeadline] = useState(new Date())
+    const [category, setCategory] = useState('STUDY')
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+        event.preventDefault()
 
         const taskData = {
-            task: title,
+            task: task.trim(),
             deadline: deadline.toISOString(),
             category: category
-        };
+        }
 
+        setLoading(true)
         fetch(`http://localhost:8080/api/todos`, {
             method: 'POST',
             headers: {
@@ -28,12 +29,12 @@ function TodoAdder(props) {
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-                // 성공 시 추가 동작 (예: 폼 초기화, 성공 메시지 표시 등)
+                setLoading(false)
             })
             .catch((error) => {
                 console.error('Error:', error);
-                // 에러 처리
-            });
+                setLoading(false)
+            })
     };
 
     return (
@@ -43,8 +44,8 @@ function TodoAdder(props) {
                     <Form.Control
                         type="text"
                         placeholder="할 일을 입력하세요"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={task}
+                        onChange={(e) => setTask(e.target.value)}
                     />
                 </Form.Group>
 
@@ -80,7 +81,7 @@ function TodoAdder(props) {
                 </Form.Group>
             </Row>
         </Form>
-    );
+    )
 }
 
-export default TodoAdder;
+export default TodoAdder
