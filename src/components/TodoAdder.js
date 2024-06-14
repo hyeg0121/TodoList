@@ -1,40 +1,36 @@
-import { ko } from 'date-fns/locale'
-import React, { useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import { ko } from 'date-fns/locale';
+import React, { useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
 
-function TodoAdder({ setLoading }) {
-    const [task, setTask] = useState('')
-    const [deadline, setDeadline] = useState(new Date())
-    const [category, setCategory] = useState('STUDY')
+function TodoAdder({ fetchTodoList }) {
+    const [task, setTask] = useState('');
+    const [deadline, setDeadline] = useState(new Date());
+    const [category, setCategory] = useState('STUDY');
 
     const handleSubmit = (event) => {
-        event.preventDefault()
+        event.preventDefault();
 
         const taskData = {
             task: task.trim(),
             deadline: deadline.toISOString(),
             category: category
-        }
+        };
 
-        setLoading(true)
-        fetch(`http://localhost:8080/api/todos`, {
-            method: 'POST',
+        axios.post('http://localhost:8080/api/todos', taskData, {
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(taskData)
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                setLoading(false)
+            .then(response => {
+                console.log('Success:', response.data);
+                fetchTodoList();
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Error:', error);
-                setLoading(false)
-            })
+            });
     };
 
     return (
@@ -81,7 +77,7 @@ function TodoAdder({ setLoading }) {
                 </Form.Group>
             </Row>
         </Form>
-    )
+    );
 }
 
-export default TodoAdder
+export default TodoAdder;
