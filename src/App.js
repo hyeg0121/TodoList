@@ -32,10 +32,10 @@ function App() {
         setLoading(true);
         axios.delete(`${process.env.REACT_APP_SERVER}/api/todos/${id}`)
             .then(response => {
-                if (response.status === 200) {
+                if (response.status === 204) {
                     fetchTodoList();
                 } else {
-                    console.error('Failed to delete the item');
+                    console.error('할 일 삭제 실패', response.status);
                 }
             })
             .catch(error => {
@@ -57,7 +57,7 @@ function App() {
                 if (response.status === 200) {
                     fetchTodoList();
                 } else {
-                    console.error('Failed to edit the item');
+                    console.error('할 일 수정 실패', response.status);
                 }
             })
             .catch(error => {
