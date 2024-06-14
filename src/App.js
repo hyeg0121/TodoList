@@ -2,41 +2,65 @@ import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import TodoAdder from "./components/TodoAdder";
 import TodoList from "./components/TodoList";
+import axios from 'axios';
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
-  const [loading, setLoading] = useState(false);
+    const [todoList, setTodoList] = useState([]);
 
-  useEffect(() => {
-    fetchTodoList();
-  }, [loading]);
+    useEffect(() => {
+        fetchTodoList();
+    }, []);
 
-  const fetchTodoList = () => {
-    fetch(`http://localhost:8080/api/todos`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        setTodoList(data);
-        setLoading(false);  // 데이터 가져오기 완료 후 loading을 false로 설정
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        setLoading(false);  // 에러 발생 시에도 loading을 false로 설정
-      });
-  };
+    const fetchTodoList = () => {
+        axios.get('http://localhost:8080/api/todos')
+            .then(response => {
+                console.log('Success:', response.data);
+                setTodoList(response.data); // Update todoList state
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
 
-  return (
-    <Container className="my-4">
-      <h1>TODO APP</h1>
-      <TodoAdder setLoading={setLoading} />
-      <TodoList todoList={todoList} setLoading={setLoading} />
-    </Container>
-  );
+    const handleDeleteTodo = (id) => {
+        axios.delete(`http://localhost:8080/api/todos/${id}`)
+            .then(response => {
+                if (response.status === 200) {
+                    setTodoList(response.data);
+                } else {
+                    console.error('Failed to delete the item');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+
+    const handleEditTodo = (id, updatedTask, updatedCategory, updatedDeadline) => {
+        axios.put(`http://localhost:8080/api/todos/${id}`, {
+            task: updatedTask,
+            category: updatedCategory,
+            deadline: updatedDeadline
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    fetchTodoList();
+                } else {
+                    console.error('Failed to edit the item');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+    };
+
+    return (
+        <Container className="my-4">
+            <h1>TODO APP</h1>
+            <TodoAdder fetchTodoList={fetchTodoList} />
+            <TodoList todoList={todoList} handleDeleteTodo={handleDeleteTodo} handleEditTodo={handleEditTodo} />
+        </Container>
+    );
 }
 
 export default App;
