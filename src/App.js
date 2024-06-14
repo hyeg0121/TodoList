@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {Container, Spinner} from "react-bootstrap";
 import TodoAdder from "./components/TodoAdder";
 import TodoList from "./components/TodoList";
 import axios from 'axios';
 
 function App() {
     const [todoList, setTodoList] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchTodoList();
     }, []);
 
     const fetchTodoList = () => {
+        setLoading(true);
         axios.get(`${process.env.REACT_APP_SERVER}/api/todos`)
             .then(response => {
                 console.log('Success:', response.data);
@@ -19,24 +21,32 @@ function App() {
             })
             .catch(error => {
                 console.error('Error:', error);
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
 
     const handleDeleteTodo = (id) => {
+        setLoading(true);
         axios.delete(`${process.env.REACT_APP_SERVER}/api/todos/${id}`)
             .then(response => {
-                if (response.status === 200) {
-                    fetchTodoList()
+                if (response.status === 204) {
+                    fetchTodoList();
                 } else {
                     console.error('Failed to delete the item');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
 
     const handleEditTodo = (id, updatedTask, updatedCategory, updatedDeadline) => {
+        setLoading(true);
         axios.put(`${process.env.REACT_APP_SERVER}/api/todos/${id}`, {
             task: updatedTask,
             category: updatedCategory,
@@ -52,13 +62,17 @@ function App() {
             .catch(error => {
                 console.error('Error:', error);
             })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     return (
         <Container className="my-4">
             <h1>TODO APP</h1>
-            <TodoAdder fetchTodoList={fetchTodoList} />
-            <TodoList todoList={todoList} handleDeleteTodo={handleDeleteTodo} handleEditTodo={handleEditTodo} />
+            {loading && <Spinner animation="border"/>}
+            <TodoAdder fetchTodoList={fetchTodoList}/>
+            <TodoList todoList={todoList} handleDeleteTodo={handleDeleteTodo} handleEditTodo={handleEditTodo}/>
         </Container>
     );
 }

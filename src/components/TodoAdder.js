@@ -1,11 +1,11 @@
-import { ko } from 'date-fns/locale';
 import React, { useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import axios from 'axios';
+import { ko } from 'date-fns/locale';
+import axios from "axios";
 
-function TodoAdder({ fetchTodoList }) {
+function TodoAdder({ fetchTodoList, loading }) {
     const [task, setTask] = useState('');
     const [deadline, setDeadline] = useState(new Date());
     const [category, setCategory] = useState('STUDY');
@@ -19,11 +19,7 @@ function TodoAdder({ fetchTodoList }) {
             category: category
         };
 
-        axios.post('http://localhost:8080/api/todos', taskData, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        axios.post(`${process.env.REACT_APP_SERVER}/api/todos`, taskData)
             .then(response => {
                 console.log('Success:', response.data);
                 fetchTodoList();
@@ -42,6 +38,7 @@ function TodoAdder({ fetchTodoList }) {
                         placeholder="할 일을 입력하세요"
                         value={task}
                         onChange={(e) => setTask(e.target.value)}
+                        disabled={loading}
                     />
                 </Form.Group>
 
@@ -55,6 +52,7 @@ function TodoAdder({ fetchTodoList }) {
                         showPopperArrow={false}
                         minDate={new Date()}
                         dateFormat="yyyy-MM-dd"
+                        disabled={loading}
                     />
                 </Form.Group>
 
@@ -62,6 +60,7 @@ function TodoAdder({ fetchTodoList }) {
                     <Form.Select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
+                        disabled={loading}
                     >
                         <option value="STUDY">공부</option>
                         <option value="PERSONAL">개인</option>
@@ -71,7 +70,7 @@ function TodoAdder({ fetchTodoList }) {
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="formGridState">
-                    <Button variant="primary" type="submit" className="col-4">
+                    <Button variant="primary" type="submit" className="col-4" disabled={loading}>
                         추가하기
                     </Button>
                 </Form.Group>
