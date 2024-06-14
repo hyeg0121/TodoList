@@ -12,7 +12,7 @@ function App() {
     }, []);
 
     const fetchTodoList = () => {
-        axios.get('http://localhost:8080/api/todos')
+        axios.get(`${process.env.REACT_APP_SERVER}/api/todos`)
             .then(response => {
                 console.log('Success:', response.data);
                 setTodoList(response.data); // Update todoList state
@@ -23,10 +23,10 @@ function App() {
     };
 
     const handleDeleteTodo = (id) => {
-        axios.delete(`http://localhost:8080/api/todos/${id}`)
+        axios.delete(`${process.env.REACT_APP_SERVER}/api/todos/${id}`)
             .then(response => {
                 if (response.status === 200) {
-                    setTodoList(response.data);
+                    fetchTodoList()
                 } else {
                     console.error('Failed to delete the item');
                 }
@@ -37,7 +37,7 @@ function App() {
     };
 
     const handleEditTodo = (id, updatedTask, updatedCategory, updatedDeadline) => {
-        axios.put(`http://localhost:8080/api/todos/${id}`, {
+        axios.put(`${process.env.REACT_APP_SERVER}/api/todos/${id}`, {
             task: updatedTask,
             category: updatedCategory,
             deadline: updatedDeadline
