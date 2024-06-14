@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import React, {useState} from 'react';
+import {Button, Col, Form, Row, Alert} from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/locale';
+import {ko} from 'date-fns/locale';
 import axios from "axios";
 
-function TodoAdder({ fetchTodoList, loading }) {
+function TodoAdder({fetchTodoList, loading}) {
+    const [showAlert, setShowAlert] = useState(false);
     const [task, setTask] = useState('');
     const [deadline, setDeadline] = useState(new Date());
     const [category, setCategory] = useState('STUDY');
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!task.trim()) {
+            setShowAlert(true);
+            return;
+        }
+
+        setShowAlert(false);
 
         const taskData = {
             task: task.trim(),
@@ -23,6 +31,7 @@ function TodoAdder({ fetchTodoList, loading }) {
             .then(response => {
                 console.log('Success:', response.data);
                 fetchTodoList();
+                setTask('');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -31,6 +40,11 @@ function TodoAdder({ fetchTodoList, loading }) {
 
     return (
         <Form onSubmit={handleSubmit}>
+            {showAlert && (
+                <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+                    할 일을 입력하세요.
+                </Alert>
+            )}
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridEmail" className="col-4">
                     <Form.Control
