@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {Container, Spinner} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Container, Spinner } from "react-bootstrap";
 import TodoAdder from "./components/TodoAdder";
 import TodoList from "./components/TodoList";
 import axios from 'axios';
@@ -7,6 +7,7 @@ import axios from 'axios';
 function App() {
     const [todoList, setTodoList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [categoryFilter, setCategoryFilter] = useState('ALL');
 
     useEffect(() => {
         fetchTodoList();
@@ -17,7 +18,7 @@ function App() {
         axios.get(`${process.env.REACT_APP_SERVER}/api/todos`)
             .then(response => {
                 console.log('Success:', response.data);
-                setTodoList(response.data); // Update todoList state
+                setTodoList(response.data);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -31,7 +32,7 @@ function App() {
         setLoading(true);
         axios.delete(`${process.env.REACT_APP_SERVER}/api/todos/${id}`)
             .then(response => {
-                if (response.status === 204) {
+                if (response.status === 200) {
                     fetchTodoList();
                 } else {
                     console.error('Failed to delete the item');
@@ -70,9 +71,15 @@ function App() {
     return (
         <Container className="my-4">
             <h1>TODO APP</h1>
-            {loading && <Spinner animation="border"/>}
-            <TodoAdder fetchTodoList={fetchTodoList}/>
-            <TodoList todoList={todoList} handleDeleteTodo={handleDeleteTodo} handleEditTodo={handleEditTodo}/>
+            {loading && <Spinner animation="border" />}
+            <TodoAdder fetchTodoList={fetchTodoList} loading={loading} />
+            <TodoList
+                todoList={todoList}
+                handleDeleteTodo={handleDeleteTodo}
+                handleEditTodo={handleEditTodo}
+                categoryFilter={categoryFilter}
+                setCategoryFilter={setCategoryFilter}
+            />
         </Container>
     );
 }

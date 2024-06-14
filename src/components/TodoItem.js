@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import {Badge, Button, Form} from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { ko } from 'date-fns/locale';
 
-function TodoItem({ todo, index, handleDeleteTodo, handleEditTodo }) {
+function TodoItem({ todo, index, handleDeleteTodo, handleEditTodo, loading }) {
     const { id, task, ctgColor, korName, deadline } = todo;
     const [editing, setEditing] = useState(false);
     const [editedTask, setEditedTask] = useState(task);
@@ -36,6 +39,7 @@ function TodoItem({ todo, index, handleDeleteTodo, handleEditTodo }) {
                     <Form.Select
                         value={editedCategory}
                         onChange={(e) => setEditedCategory(e.target.value)}
+                        disabled={loading}
                     >
                         <option value="STUDY">공부</option>
                         <option value="PERSONAL">개인</option>
@@ -52,6 +56,7 @@ function TodoItem({ todo, index, handleDeleteTodo, handleEditTodo }) {
                         type="text"
                         value={editedTask}
                         onChange={(e) => setEditedTask(e.target.value)}
+                        disabled={loading}
                     />
                 ) : (
                     task
@@ -59,10 +64,14 @@ function TodoItem({ todo, index, handleDeleteTodo, handleEditTodo }) {
             </td>
             <td>
                 {editing ? (
-                    <Form.Control
-                        type="date"
-                        value={editedDeadline.toISOString().substring(0, 10)} // Format to YYYY-MM-DD for input value
-                        onChange={(e) => setEditedDeadline(new Date(e.target.value))}
+                    <DatePicker
+                        selected={editedDeadline}
+                        onChange={date => setEditedDeadline(date)}
+                        className="form-control"
+                        locale={ko}
+                        showPopperArrow={false}
+                        dateFormat="yyyy-MM-dd"
+                        disabled={loading}
                     />
                 ) : (
                     deadline
@@ -71,14 +80,15 @@ function TodoItem({ todo, index, handleDeleteTodo, handleEditTodo }) {
             <td>
                 {editing ? (
                     <>
-                        <Button variant="success" onClick={saveChanges}>저장</Button>{' '}
-                        <Button variant="secondary" onClick={cancelEdit}>취소</Button>
+                        <Button variant="success" onClick={saveChanges} disabled={loading}>저장</Button>{' '}
+                        <Button variant="secondary" onClick={cancelEdit} disabled={loading}>취소</Button>
                     </>
                 ) : (
-                    <Button variant="outline-dark" onClick={toggleEditing}>수정하기</Button>
+                    <>
+                        <Button variant="outline-dark" onClick={toggleEditing} disabled={loading}>수정하기</Button>{' '}
+                        <Button variant="outline-dark" onClick={deleteTodo} disabled={loading}>삭제</Button>
+                    </>
                 )}
-                {' '}
-                <Button variant="outline-dark" onClick={deleteTodo}>삭제</Button>
             </td>
         </tr>
     );
