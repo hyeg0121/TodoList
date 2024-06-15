@@ -76,10 +76,19 @@ function TodoAdder({fetchTodoList, loading}) {
                         onChange={(e) => setCategory(e.target.value)}
                         disabled={loading}
                     >
-                        <option value="STUDY">공부</option>
-                        <option value="PERSONAL">개인</option>
-                        <option value="EXERCISE">운동</option>
-                        <option value="OTHER">기타</option>
+                        <option value="UIUX">UI/UX</option>
+                        <option value="SPRING">Spring</option>
+                        <option value="UIDESIGN">UI 디자인</option>
+                        <option value="REACT">React</option>
+                        <option value="NODEJS">NodeJS</option>
+                        <option value="DJANGO">DJango</option>
+                        <option value="DB">DB</option>
+                        <option value="CS">컴퓨터 시스템 일반</option>
+                        <option value="NETWORK">네트워크</option>
+                        <option value="MATH">정보처리수학</option>
+                        <option value="KOREAN">커리어 국어</option>
+                        <option value="ENGLISH">미디어 실무 영어</option>
+                        <option value="ETC">기타</option>
                     </Form.Select>
                 </Form.Group>
 

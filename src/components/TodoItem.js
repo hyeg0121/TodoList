@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Form, Modal} from 'react-bootstrap';
+import {Button, ButtonGroup, Form, Modal} from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {ko} from 'date-fns/locale';
@@ -98,15 +98,15 @@ function TodoItem({todo, index, handleDeleteTodo, handleEditTodo, loading}) {
                 </td>
                 <td>
                     {editing ? (
-                        <>
+                        <ButtonGroup>
                             <Button variant="success" onClick={saveChanges} disabled={loading}>저장</Button>{' '}
                             <Button variant="secondary" onClick={cancelEdit} disabled={loading}>취소</Button>
-                        </>
+                        </ButtonGroup>
                     ) : (
-                        <>
+                        <ButtonGroup>
                             <Button variant="outline-dark" onClick={toggleEditing} disabled={loading}>수정하기</Button>{' '}
                             <Button variant="outline-dark" onClick={deleteTodo} disabled={loading}>삭제</Button>
-                        </>
+                        </ButtonGroup>
                     )}
                 </td>
             </tr>

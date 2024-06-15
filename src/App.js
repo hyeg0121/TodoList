@@ -70,7 +70,7 @@ function App() {
 
     return (
         <Container className="my-4">
-            <h1>TODO APP</h1>
+            <h1>Mirim ToDo</h1>
             {loading && <Spinner animation="border" />}
             <TodoAdder fetchTodoList={fetchTodoList} loading={loading} />
             <TodoList
