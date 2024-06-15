@@ -104,7 +104,7 @@ function TodoItem({todo, index, handleDeleteTodo, handleEditTodo, loading}) {
                         </ButtonGroup>
                     ) : (
                         <ButtonGroup>
-                            <Button variant="outline-dark" onClick={toggleEditing} disabled={loading}>수정하기</Button>{' '}
+                            <Button variant="outline-dark" onClick={toggleEditing} disabled={loading}>수정</Button>{' '}
                             <Button variant="outline-dark" onClick={deleteTodo} disabled={loading}>삭제</Button>
                         </ButtonGroup>
                     )}

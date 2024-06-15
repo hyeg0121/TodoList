@@ -94,7 +94,7 @@ function TodoAdder({fetchTodoList, loading}) {
 
                 <Form.Group as={Col} controlId="formGridState">
                     <Button variant="primary" type="submit" className="col-4" disabled={loading}>
-                        추가하기
+                        추가
                     </Button>
                 </Form.Group>
             </Row>
